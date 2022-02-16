@@ -1,0 +1,14 @@
+var ram = 16;
+
+// Iterator we'll use for our loop
+var i = 0;
+
+// Continuously try to purchase servers until we've reached the maximum
+// amount of servers
+while (i < getPurchasedServerLimit()) {
+    // Check if we have enough money to purchase a server
+    if (getServerMoneyAvailable("home") > getPurchasedServerCost(ram)) {
+        var hostname = purchaseServer("hive-" + i, ram);
+        ++i;
+    }
+}

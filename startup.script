@@ -1,0 +1,99 @@
+target = "the-hub";
+
+var serverList = [
+    "CSEC",
+    "sigma-cosmetics",
+    "joesguns",
+    "nectar-net",
+    "hong-fang-tea",
+    "harakiri-sushi",
+    "foodnstuff",
+    "neo-net",
+    "zer0",
+    "max-hardware",
+    "iron-gym",
+    "phantasy",
+    "omega-net",
+    "netlink",
+    "rothman-uni",
+    "silver-helix",
+    "summit-uni",
+    "avmnite-02h",
+    "catalyst",
+    "I.I.I.I",
+    "the-hub",
+];
+
+var hackFile = "hack.js";
+
+var threads = {
+    8: 3,
+    16: 6,
+    32: 12,
+    64: 24,
+    128: 48,
+    256: 96,
+}
+
+function waitApp(prg) {
+    while (!fileExists(prg)) {
+        sleep(60000);
+    }
+}
+
+function hack0(servers) {
+    for (var i = 0; i < servers.length; ++i) {
+        var server = servers[i];
+
+        ports = getServerNumPortsRequired(server);
+
+        if (ports > 3) {
+            continue;
+        }
+
+        if (ports > 2) {
+            waitApp("relaySMTP.exe");
+            relaysmtp(server);
+        }
+
+        if (ports > 1) {
+            waitApp("FTPCrack.exe");
+            ftpcrack(server);
+        }
+
+        if (ports > 0) {
+            waitApp("BruteSSH.exe");
+            brutessh(server);
+        }
+
+        t = threads[getServerRam(server)[0]];
+
+        scp(hackFile, server);
+
+        if (!hasRootAccess(server)) {
+            nuke(server);
+        }
+
+        exec(hackFile, server, t, server);
+    }
+}
+
+hack0(serverList);
+
+var ram = 16;
+
+var i = 0;
+/*
+while (i < getPurchasedServerLimit()) {
+    // Check if we have enough money to purchase a server
+    // If we have enough money, then:
+    //  1. Purchase the server
+    //  2. Copy our hacking script onto the newly-purchased server
+    //  3. Run our hacking script on the newly-purchased server with 3 threads
+    //  4. Increment our iterator to indicate that we've bought a new server
+    var hostname = "pserv-" + i;
+    scp(hackFile, hostname);
+    exec(hackFile, hostname, 6, target);
+    ++i;
+}
+*/
