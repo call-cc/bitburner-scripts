@@ -15,7 +15,8 @@ export async function main(ns) {
             currentCash *= allowancePercentage;
 
             if (ns.hacknet.getPurchaseNodeCost() <= currentCash) {
-                ns.hacknet.purchaseNode();
+                let newNodeId = ns.hacknet.purchaseNode();
+                hacknetnodes.push("hacknet-node-" + newNodeId);
             }
 
             let node = ns.hacknet.getNodeStats(i);
@@ -43,7 +44,7 @@ export async function main(ns) {
 
             if (topgain === 0) {
                 ns.print('All Gains maxed on Node' + i);
-                break;
+                continue;
             }
 
             if (topgain == gain[0] && ns.hacknet.getLevelUpgradeCost(i, 1) < currentCash) {
