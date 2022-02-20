@@ -1,20 +1,32 @@
 /** @param {NS} ns **/
 export async function main(ns) {
-	let servers = ns.scan();
+    const sList = new Set();
 
-	let smap = new Map();
-	for (let i = 0; i < servers.length; i++) {
-		let host = servers[i];
+    function recursiveScan(servers) {
+        for (let i = 0; i < servers.length; i++) {
+            let host = servers[i];
 
-		if (host.startsWith("hive-")) {
-			continue;
-		}
-		smap.set(host, false);
-	}
+            if (host.startsWith('hive-')) {
+                continue;
+            }
 
-	for (let [k, v] of smap) {
-		ns.print(k + ": " + v);
-	}
+            if (sList.has(host)) {
+                continue;
+            }
 
-	await ns.sleep(60000);
+            sList.add(host);
+            recursiveScan(ns.scan(host));
+        }
+    }
+
+    recursiveScan(['home']);
+    sList.delete('home');
+
+    let count = 0;
+    for (const host of sList.keys()) {
+        ns.print(`"${host}",`);
+        count++;
+    }
+
+    ns.print('Total number of servers: ' + count);
 }
