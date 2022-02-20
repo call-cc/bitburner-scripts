@@ -1,11 +1,20 @@
 /** @param {NS} ns **/
 export async function main(ns) {
-    let allowancePercentage = 0.01;
+    let allowancePercentage = 0.005; // 0.50%
+
     let hacknetnodes = [];
+
+    ns.disableLog("ALL");
+
+    if (ns.hacknet.numNodes() == 0) {
+        ns.hacknet.purchaseNode();
+    }
 
     for (let i = 0; i < ns.hacknet.numNodes(); i++) {
         hacknetnodes.push("hacknet-node-" + i);
     }
+
+    let upgrades = {};
 
     while (true) {
         for (let i = 0; i < hacknetnodes.length; i++) {
@@ -17,6 +26,7 @@ export async function main(ns) {
             if (ns.hacknet.getPurchaseNodeCost() <= currentCash) {
                 let newNodeId = ns.hacknet.purchaseNode();
                 hacknetnodes.push("hacknet-node-" + newNodeId);
+                ns.print("Purchased new node");
             }
 
             let node = ns.hacknet.getNodeStats(i);
@@ -48,19 +58,30 @@ export async function main(ns) {
             }
 
             if (topgain == gain[0] && ns.hacknet.getLevelUpgradeCost(i, 1) < currentCash) {
-                ns.print('Upgrading Level on Node' + i);
                 ns.hacknet.upgradeLevel(i, 1);
+                upgrades["level"] = true;
             } else if (topgain == gain[1] && ns.hacknet.getRamUpgradeCost(i, 1) < currentCash) {
-                ns.print('Upgrading Ram on Node' + i);
                 ns.hacknet.upgradeRam(i);
+                upgrades["ram"] = true;
             } else if (topgain == gain[2] && ns.hacknet.getCoreUpgradeCost(i, 1) < currentCash) {
-                ns.print('Upgrading Core on Node' + i);
                 ns.hacknet.upgradeCore(i);
+                upgrades["core"] = true;
             } else {
-                ns.print('Cannot afford upgrades on Node' + i);
+                //ns.print('Cannot afford upgrades on Node' + i);
             }
         }
 
-        await ns.sleep(1000);
+        if (upgrades["level"]) {
+            ns.print("Upgraded level");
+        }
+        if (upgrades["ram"]) {
+            ns.print("Upgraded RAM");
+        }
+        if (upgrades["core"]) {
+            ns.print("Upgraded core");
+        }
+
+        upgrades = {};
+        await ns.sleep(100);
     }
 }

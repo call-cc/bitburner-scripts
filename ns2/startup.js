@@ -1,5 +1,6 @@
 export async function main(ns) {
     let serverList = [
+        "n00dles",
         "CSEC",
         "sigma-cosmetics",
         "joesguns",
@@ -19,13 +20,52 @@ export async function main(ns) {
         "summit-uni",
         "avmnite-02h",
         "catalyst",
-        "I.I.I.I",
         "the-hub",
+        "aevum-police",
+        "rho-construction",
+        "millenium-fitness",
+        "alpha-ent",
+        "unitalife",
+        "zb-institute",
+        "lexo-corp",
+        "solaris",
+        "global-pharm",
+        "omnia",
+        "univ-energy",
+        "darkweb",
+        "I.I.I.I",
+        "comptek",
+        "johnson-ortho",
+        "snap-fitness",
+        "syscore",
+        "zb-def",
+        "nova-med",
+        "zeus-med",
+        "galactic-cyber",
+        "infocomm",
+        "aerocorp",
+        "taiyang-digital",
+        "deltaone",
+        "icarus",
+        "defcomm",
+        "crush-fitness",
     ];
 
-    let hackFile = "hack.js";
+    let hackFile = "/ns2/hack.js";
+
+    let hackPrgs = [
+        "BruteSSH.exe",
+        "FTPCrack.exe",
+        "relaySMTP.exe",
+        "HTTPWorm.exe",
+        "SQLInject.exe"];
+
+    ns.disableLog("ALL");
 
     let threads = {
+        0: 0,
+        1: 0,
+        4: 1,
         8: 3,
         16: 6,
         32: 12,
@@ -34,44 +74,58 @@ export async function main(ns) {
         256: 96,
     }
 
-    for (let i = 0; i < serverList.length; ++i) {
-        let server = serverList[i];
-
-        let ports = ns.getServerNumPortsRequired(server);
-
-        if (ports > 3) {
-            continue;
+    while (true) {
+        let canOpen = 0;
+        for (let i = 0; i < hackPrgs.length; i++) {
+            if (ns.fileExists(hackPrgs[i])) {
+                canOpen++;
+            }
         }
 
-        if (ports > 2) {
-            await waitApp(ns, "relaySMTP.exe");
-            ns.relaysmtp(server);
+        for (let i = 0; i < serverList.length; i++) {
+            let server = serverList[i];
+
+            if (ns.getHackingLevel() < ns.getServerRequiredHackingLevel(server)) {
+                continue;
+            }
+
+            if (canOpen < ns.getServerNumPortsRequired(server)) {
+                continue;
+            }
+
+            if (ns.fileExists("BruteSSH.exe")) {
+                ns.brutessh(server);
+            }
+            if (ns.fileExists("FTPCrack.exe")) {
+                ns.ftpcrack(server);
+            }
+            if (ns.fileExists("relaySMTP.exe")) {
+                ns.relaysmtp(server);
+            }
+            if (ns.fileExists("HTTPWorm.exe")) {
+                ns.httpworm(server);
+            }
+            if (ns.fileExists("SQLInject.exe")) {
+                ns.sqlinject(server);
+            }
+
+            let serverRam = ns.getServerMaxRam(server);
+            let t = threads[serverRam];
+
+            await ns.scp(hackFile, server);
+
+            if (!ns.hasRootAccess(server)) {
+                ns.nuke(server);
+                ns.print("Nuked " + server);
+            }
+
+            if(serverRam >= 4) {
+                ns.exec(hackFile, server, t, server);
+            } else {
+                ns.exec(hackFile, "home", 24, server);
+            }
         }
 
-        if (ports > 1) {
-            await waitApp(ns, "FTPCrack.exe");
-            ns.ftpcrack(server);
-        }
-
-        if (ports > 0) {
-            await waitApp(ns, "BruteSSH.exe");
-            ns.brutessh(server);
-        }
-
-        let t = threads[ns.getServerRam(server)[0]];
-
-        await ns.scp(hackFile, server);
-
-        // if (!ns.hasRootAccess(server)) {
-        ns.nuke(server);
-        //}
-
-        ns.exec(hackFile, server, t, server);
-    }
-}
-
-async function waitApp(ns, prg) {
-    while (!ns.fileExists(prg)) {
         await ns.sleep(60000);
     }
 }

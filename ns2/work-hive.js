@@ -1,7 +1,7 @@
 export async function main(ns) {
     let target = "the-hub";
 
-    let hackFile = "hack.js";
+    let hackFile = "/ns2/hack.js";
 
     let i = 0;
     while(i < ns.getPurchasedServerLimit()) {
