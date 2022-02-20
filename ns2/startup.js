@@ -1,66 +1,88 @@
 export async function main(ns) {
     let serverList = [
-        "n00dles",
-        "CSEC",
-        "sigma-cosmetics",
-        "joesguns",
-        "nectar-net",
-        "hong-fang-tea",
-        "harakiri-sushi",
-        "foodnstuff",
-        "neo-net",
-        "zer0",
-        "max-hardware",
-        "iron-gym",
-        "phantasy",
-        "omega-net",
-        "netlink",
-        "rothman-uni",
-        "silver-helix",
-        "summit-uni",
-        "avmnite-02h",
-        "catalyst",
-        "the-hub",
-        "aevum-police",
-        "rho-construction",
-        "millenium-fitness",
-        "alpha-ent",
-        "unitalife",
-        "zb-institute",
-        "lexo-corp",
-        "solaris",
-        "global-pharm",
-        "omnia",
-        "univ-energy",
-        "darkweb",
-        "I.I.I.I",
-        "comptek",
-        "johnson-ortho",
-        "snap-fitness",
-        "syscore",
-        "zb-def",
-        "nova-med",
-        "zeus-med",
-        "galactic-cyber",
-        "infocomm",
-        "aerocorp",
-        "taiyang-digital",
-        "deltaone",
-        "icarus",
-        "defcomm",
-        "crush-fitness",
+        'n00dles',
+        'foodnstuff',
+        'sigma-cosmetics',
+        'joesguns',
+        'hong-fang-tea',
+        'harakiri-sushi',
+        'nectar-net',
+        'phantasy',
+        'johnson-ortho',
+        'rothman-uni',
+        'avmnite-02h',
+        'catalyst',
+        'lexo-corp',
+        'global-pharm',
+        'max-hardware',
+        'neo-net',
+        'the-hub',
+        'zb-institute',
+        'aevum-police',
+        'comptek',
+        'syscore',
+        'netlink',
+        'summit-uni',
+        'rho-construction',
+        'millenium-fitness',
+        'galactic-cyber',
+        'aerocorp',
+        'omnia',
+        'univ-energy',
+        'taiyang-digital',
+        'zeus-med',
+        'nova-med',
+        'titan-labs',
+        'stormtech',
+        'vitalife',
+        'omnitek',
+        'b-and-a',
+        'megacorp',
+        'nwo',
+        'The-Cave',
+        '4sigma',
+        'blade',
+        'fulcrumassets',
+        'powerhouse-fitness',
+        'ecorp',
+        '.',
+        'microdyne',
+        'fulcrumtech',
+        'applied-energetics',
+        'deltaone',
+        'icarus',
+        'solaris',
+        'unitalife',
+        'defcomm',
+        'infocomm',
+        'run4theh111z',
+        'helios',
+        'kuai-gong',
+        'clarkinc',
+        'zb-def',
+        'I.I.I.I',
+        'alpha-ent',
+        'snap-fitness',
+        'iron-gym',
+        'zer0',
+        'CSEC',
+        'silver-helix',
+        'crush-fitness',
+        'omega-net',
+        'darkweb',
     ];
 
-    let hackFile = "/ns2/hack.js";
+    let hackFile = '/ns2/hack.js';
 
     let hackPrgs = [
-        "BruteSSH.exe",
-        "FTPCrack.exe",
-        "relaySMTP.exe",
-        "HTTPWorm.exe",
-        "SQLInject.exe"];
+        'BruteSSH.exe',
+        'FTPCrack.exe',
+        'relaySMTP.exe',
+        'HTTPWorm.exe',
+        'SQLInject.exe',
+    ];
 
-    ns.disableLog("ALL");
+    ns.disableLog('ALL');
 
     let threads = {
         0: 0,
@@ -72,7 +94,7 @@ export async function main(ns) {
         64: 24,
         128: 48,
         256: 96,
-    }
+    };
 
     while (true) {
         let canOpen = 0;
@@ -85,7 +107,9 @@ export async function main(ns) {
         for (let i = 0; i < serverList.length; i++) {
             let server = serverList[i];
 
-            if (ns.getHackingLevel() < ns.getServerRequiredHackingLevel(server)) {
+            if (
+                ns.getHackingLevel() < ns.getServerRequiredHackingLevel(server)
+            ) {
                 continue;
             }
 
@@ -93,19 +117,19 @@ export async function main(ns) {
                 continue;
             }
 
-            if (ns.fileExists("BruteSSH.exe")) {
+            if (ns.fileExists('BruteSSH.exe')) {
                 ns.brutessh(server);
             }
-            if (ns.fileExists("FTPCrack.exe")) {
+            if (ns.fileExists('FTPCrack.exe')) {
                 ns.ftpcrack(server);
             }
-            if (ns.fileExists("relaySMTP.exe")) {
+            if (ns.fileExists('relaySMTP.exe')) {
                 ns.relaysmtp(server);
             }
-            if (ns.fileExists("HTTPWorm.exe")) {
+            if (ns.fileExists('HTTPWorm.exe')) {
                 ns.httpworm(server);
             }
-            if (ns.fileExists("SQLInject.exe")) {
+            if (ns.fileExists('SQLInject.exe')) {
                 ns.sqlinject(server);
             }
 
@@ -116,13 +140,13 @@ export async function main(ns) {
 
             if (!ns.hasRootAccess(server)) {
                 ns.nuke(server);
-                ns.print("Nuked " + server);
+                ns.print('Nuked ' + server);
             }
 
-            if(serverRam >= 4) {
+            if (serverRam >= 4) {
                 ns.exec(hackFile, server, t, server);
             } else {
-                ns.exec(hackFile, "home", 24, server);
+                ns.exec(hackFile, 'home', 24, server);
             }
         }
 
