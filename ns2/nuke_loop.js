@@ -1,6 +1,6 @@
 /** @param {import("/.").NS} ns */
 export async function main(ns) {
-    let serverList = [
+    const serverList = [
         'n00dles',
         'foodnstuff',
         'sigma-cosmetics',
@@ -70,12 +70,10 @@ export async function main(ns) {
         'silver-helix',
         'crush-fitness',
         'omega-net',
-        'darkweb',
+        //        'darkweb',
     ];
 
-    let hackFile = '/ns2/hack.js';
-
-    let hackPrgs = [
+    const hackPrgs = [
         'BruteSSH.exe',
         'FTPCrack.exe',
         'relaySMTP.exe',
@@ -84,18 +82,6 @@ export async function main(ns) {
     ];
 
     ns.disableLog('ALL');
-
-    let threads = {
-        0: 0,
-        1: 0,
-        4: 1,
-        8: 3,
-        16: 6,
-        32: 12,
-        64: 24,
-        128: 48,
-        256: 96,
-    };
 
     while (true) {
         let canOpen = 0;
@@ -106,17 +92,12 @@ export async function main(ns) {
         }
 
         for (let i = 0; i < serverList.length; i++) {
-            let server = serverList[i];
+            const server = serverList[i];
 
-            if (
-                ns.getHackingLevel() < ns.getServerRequiredHackingLevel(server)
-            ) {
+            if (ns.getHackingLevel() < ns.getServerRequiredHackingLevel(server))
                 continue;
-            }
 
-            if (canOpen < ns.getServerNumPortsRequired(server)) {
-                continue;
-            }
+            if (canOpen < ns.getServerNumPortsRequired(server)) continue;
 
             if (ns.fileExists('BruteSSH.exe')) {
                 ns.brutessh(server);
@@ -134,24 +115,9 @@ export async function main(ns) {
                 ns.sqlinject(server);
             }
 
-            if (ns.getServerMaxMoney(server) < 1) {
-                continue;
-            }
-
-            let serverRam = ns.getServerMaxRam(server);
-            let t = threads[serverRam];
-
-            await ns.scp(hackFile, server);
-
             if (!ns.hasRootAccess(server)) {
                 ns.nuke(server);
                 ns.print('Nuked ' + server);
-            }
-
-            if (serverRam >= 4) {
-                ns.exec(hackFile, server, t, server);
-            } else {
-                ns.exec(hackFile, 'home', 24, server);
             }
         }
 

@@ -1,5 +1,6 @@
-/** @param {NS} ns **/
-export async function main(ns) {
+/** @param {import("/.").NS} ns */
+export function scan(ns) {
+    ns.disableLog('ALL');
     const sList = new Set();
 
     function recursiveScan(servers) {
@@ -17,16 +18,15 @@ export async function main(ns) {
             sList.add(host);
             recursiveScan(ns.scan(host));
         }
+
+        return sList;
     }
 
-    recursiveScan(['home']);
-    sList.delete('home');
+    return recursiveScan(['home']);
 
-    let count = 0;
+    /*
     for (const host of sList.keys()) {
-        ns.print(`"${host}",`);
-        count++;
+        await ns.write('servers.txt', `${host}\n`, 'a');
     }
-
-    ns.print('Total number of servers: ' + count);
+    */
 }
