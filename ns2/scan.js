@@ -22,11 +22,5 @@ export function scan(ns) {
         return sList;
     }
 
-    return recursiveScan(['home']);
-
-    /*
-    for (const host of sList.keys()) {
-        await ns.write('servers.txt', `${host}\n`, 'a');
-    }
-    */
+    return [...recursiveScan(['home'])];
 }
