@@ -4,23 +4,18 @@ export function scan(ns) {
     const sList = new Set();
 
     function recursiveScan(servers) {
-        for (let i = 0; i < servers.length; i++) {
-            let host = servers[i];
-
-            if (host.startsWith('hive-')) {
+        for (let server of servers) {
+            if (ns.getServer(server).purchasedByPlayer && server != 'home')
                 continue;
-            }
 
-            if (sList.has(host)) {
-                continue;
-            }
+            if (sList.has(server)) continue;
 
-            sList.add(host);
-            recursiveScan(ns.scan(host));
+            sList.add(server);
+            recursiveScan(ns.scan(server));
         }
 
         return sList;
     }
 
-    return [...recursiveScan(['home'])];
+    return Array(...recursiveScan(['home']));
 }
